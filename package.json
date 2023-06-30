@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/diego-deese/react-baby-steps/issues"
   },
-  "homepage": "https://github.com/diego-deese/react-baby-steps#readme"
+  "homepage": "https://github.com/diego-deese/react-baby-steps#readme",
+  "devDependencies": {
+    "standard": "^16.0.4"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json"
+  }
 }
