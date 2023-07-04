@@ -20,6 +20,19 @@ body {
   font-size: 50px;
 }
 
+.board h2 {
+  color: #5e93ac;
+  position: fixed;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 30px;
+}
+
+
+
 .covered {
   background-color: #ccc;
   width: 100px;
@@ -61,4 +74,24 @@ body {
 
 .card:hover {
   border: 3px solid #FB8500;
+}
+
+.board .cards {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.info {
+  text-align: center;
+  border: 2px solid #fff;
+  border-radius: 2px;
+  font-size: 30px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-weight: bold;
+  background-color: #FFB703;
+  color: #023047;
+  top: 700px;
+  position: fixed;
 }
