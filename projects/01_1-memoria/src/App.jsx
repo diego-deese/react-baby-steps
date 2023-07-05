@@ -1,5 +1,4 @@
 import { useState } from 'react'
-
 import { Card } from '/components/Card.jsx'
 
 function App() {
@@ -18,22 +17,54 @@ function App() {
   const [cards, setCards] = useState(initialCards)
   const [msj, setMsj] = useState('Escoge una carta')
 
+  const checkIfAllMatched = () => {
+    const allMatched = cards.every(card => card.isMatched === true)
+    return allMatched
+  }
+
+  const coverAllCards = () => {
+    cards.forEach(card => {
+      card.isCovered = true
+    })
+  }
+
   const checkGuess = (index, compareName) => {
-    console.log('checkGuess')
+    allMatched = checkIfAllMatched()
+    if (cards[index].charName === cardInGuessin && !allMatched) {
+      setMsj('Adivinaste! Sigue así')
+      setTotalGuess(totalGuess + 1)
+      setCardInGuessing(null)
+      setInGuessingMode(false)
+      console.log('adivino')
+    } else if (!allMatched) {
+      setMsj('Fallaste! Vuelve a intentarlo')
+      setCardInGuessing(null)
+      setInGuessingMode(false)
+      coverAllCards()
+    } else {
+      setMsj('Ganaste!')
+      setCardInGuessing(null)
+      setInGuessingMode(false)
+      confetti()
+    }
+    
   }
 
   const updateCard = (index) => {
     const newCards = [...cards]
 
-    if (inGuessingMode) {
+    if (inGuessingMode && newCards[index].isCovered) {
+      newCards[index].isCovered = !newCards[index].isCovered
+      setCards(newCards)
       const hasGuessed = checkGuess(index, newCards[index].charName)
-    } else {
+    } else if (!inGuessingMode && newCards[index].isCovered){
       newCards[index].isCovered = !newCards[index].isCovered
       setCards(newCards)
       setCardInGuessing(newCards[index].charName)
       const newGuessingMode = !inGuessingMode
       setInGuessingMode(newGuessingMode)
       console.log('inGuessingMode', inGuessingMode)
+      setMsj('Escoge otra carta')
     }
   }
 
