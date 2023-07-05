@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Card } from '/components/Card.jsx'
+import confetti from 'canvas-confetti'
 
 function App() {
   const initialCards = [
@@ -16,6 +17,22 @@ function App() {
   const [cardInGuessing, setCardInGuessing] = useState(null)
   const [cards, setCards] = useState(initialCards)
   const [msj, setMsj] = useState('Escoge una carta')
+  const [cardsMatched, setCardsMatched] = useState([])
+
+  const gameWin = () => {
+    setMsj('Ganaste! Recarga la partida para volver a jugar')
+    setCardInGuessing(null)
+    setInGuessingMode(false)
+    confetti()
+  }
+
+  const matchCards = (compareName) => {
+    const newCards = [...cards]
+    newCards.forEach(card => {
+      if (card.charName === compareName) card.isMatched = true
+    })
+    setCards(newCards)
+  }
 
   const checkIfAllMatched = () => {
     const allMatched = cards.every(card => card.isMatched === true)
@@ -24,30 +41,28 @@ function App() {
 
   const coverAllCards = () => {
     cards.forEach(card => {
-      card.isCovered = true
+      if (!cardsMatched.includes(card.charName)) card.isCovered = true
     })
   }
 
   const checkGuess = (index, compareName) => {
-    allMatched = checkIfAllMatched()
-    if (cards[index].charName === cardInGuessin && !allMatched) {
+    if (cards[index].charName === cardInGuessing) {
       setMsj('Adivinaste! Sigue así')
       setTotalGuess(totalGuess + 1)
       setCardInGuessing(null)
       setInGuessingMode(false)
-      console.log('adivino')
-    } else if (!allMatched) {
-      setMsj('Fallaste! Vuelve a intentarlo')
-      setCardInGuessing(null)
-      setInGuessingMode(false)
-      coverAllCards()
+      const newCardsMatched = [...cardsMatched]
+      newCardsMatched.push(compareName)
+      setCardsMatched(newCardsMatched)
+      matchCards(compareName)
+      if (checkIfAllMatched()) gameWin()
     } else {
-      setMsj('Ganaste!')
+      setMsj('Fallaste! Vuelve a intentarlo')
+      coverAllCards()
       setCardInGuessing(null)
       setInGuessingMode(false)
-      confetti()
+
     }
-    
   }
 
   const updateCard = (index) => {
@@ -56,8 +71,10 @@ function App() {
     if (inGuessingMode && newCards[index].isCovered) {
       newCards[index].isCovered = !newCards[index].isCovered
       setCards(newCards)
-      const hasGuessed = checkGuess(index, newCards[index].charName)
+      console.log('Segundo click')
+      checkGuess(index, newCards[index].charName)
     } else if (!inGuessingMode && newCards[index].isCovered){
+      console.log('Primer click')
       newCards[index].isCovered = !newCards[index].isCovered
       setCards(newCards)
       setCardInGuessing(newCards[index].charName)
